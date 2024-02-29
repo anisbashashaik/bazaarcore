@@ -37,7 +37,8 @@ public class WebSecurityConfiguration {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable);
     http.authorizeHttpRequests(rQ -> {
-           rQ.requestMatchers("authenticate", "/sign-up", "/apis/v1/*", "/apis/v1/*/*").permitAll();
+           rQ.requestMatchers("authenticate", "/sign-up", "/apis/v1/*", "/apis/v1/*/*",
+           "/yfsuser/*").permitAll();
            rQ.requestMatchers("/api/**").authenticated();
          });
 
