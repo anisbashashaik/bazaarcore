@@ -2,7 +2,6 @@ package com.gnt.oms.controller;
 
 import java.io.IOException;
 
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gnt.oms.dto.AuthenticationRequest;
-import com.gnt.oms.dto.AuthenticationResponse;
 import com.gnt.oms.entities.User;
 import com.gnt.oms.repository.UserRepository;
 import com.gnt.oms.service.user.UserService;
@@ -33,6 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @RestController
 public class AuthenticationController {
     
+    @SuppressWarnings("unused")
     @Autowired
     private UserService userService;
 
@@ -50,6 +48,7 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @SuppressWarnings("unused")
     @PostMapping("/authenticate")
     public void creteAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response)  
     throws IOException, BadCredentialsException, DisabledException, UsernameNotFoundException, JSONException, 
