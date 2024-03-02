@@ -13,19 +13,18 @@ import com.gnt.oms.service.user.UserService;
 
 @RestController
 public class SignUpController {
-    
+
     @Autowired
     private UserService userService;
 
-
-   @PostMapping("/sign-up")
+    @PostMapping("/sign-up")
     public ResponseEntity<?> signupUser(@RequestBody SignupDTO signupDTO) {
 
-        if(userService.hasUserWithEmail(signupDTO.getEmail())){
+        if (userService.hasUserWithEmail(signupDTO.getEmailId())) {
             return new ResponseEntity<>("User already exists", HttpStatus.NOT_ACCEPTABLE);
         }
         UserDTO createdUser = userService.createUser(signupDTO);
-        if(createdUser == null){
+        if (createdUser == null) {
             return new ResponseEntity<>("User not created. Come again later!", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);

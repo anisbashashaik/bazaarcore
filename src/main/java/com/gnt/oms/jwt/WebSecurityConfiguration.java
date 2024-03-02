@@ -1,4 +1,4 @@
-package com.gnt.oms.configuration;
+package com.gnt.oms.jwt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,35 +15,40 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.gnt.oms.filters.JwtRequestFilter;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfiguration {
-    
+
   @Autowired
-  private JwtRequestFilter authFilter;
+  private JwtFilter authFilter;
 
-  /*@Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    return http.csrf().disable().authorizeHttpRequests().requestMatchers("authenticate", "/sign-up").permitAll().
-    and().authorizeHttpRequests().requestMatchers("/api/**").
-    authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
-    and().authFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class).build();
-  }*/
+  /*
+   * @Bean
+   * public SecurityFilterChain securityFilterChain(HttpSecurity http) throws
+   * Exception {
+   * return
+   * http.csrf().disable().authorizeHttpRequests().requestMatchers("authenticate",
+   * "/sign-up").permitAll().
+   * and().authorizeHttpRequests().requestMatchers("/api/**").
+   * authenticated().and().sessionManagement().sessionCreationPolicy(
+   * SessionCreationPolicy.STATELESS).
+   * and().authFilterBefore(authFilter,
+   * UsernamePasswordAuthenticationFilter.class).build();
+   * }
+   */
 
-    @Bean
+  @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable);
     http.authorizeHttpRequests(rQ -> {
-           rQ.requestMatchers("authenticate", "/sign-up", "/apis/v1/*", "/apis/v1/*/*",
-           "/yfsuser/*").permitAll();
-           rQ.requestMatchers("/api/**").authenticated();
-         });
+      rQ.requestMatchers("/authenticate", "/sign-up", "/apis/v1/*", "/apis/v1/*/*",
+          "/user/login", "/user/signup", "/user/forgotPassword", "/yfsuser/*").permitAll();
+      rQ.requestMatchers("/api/**").authenticated();
+    });
 
-    http.sessionManagement(sessionAuthenticationStrategy ->
-        sessionAuthenticationStrategy.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+    http.sessionManagement(sessionAuthenticationStrategy -> sessionAuthenticationStrategy
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     // http.authenticationProvider(authenticationProvider());
     http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();

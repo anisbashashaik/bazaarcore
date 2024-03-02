@@ -3,15 +3,14 @@ package com.gnt.oms.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.gnt.oms.entities.User;
-import com.gnt.oms.enums.UserRole;
+import com.gnt.oms.entities.YFSUser;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<YFSUser, Long>{
     
 
-   User findFirstByEmail(String email);
+   YFSUser findFirstByEmailId(String emailId);
 
-   User findByUserRole(UserRole role);
+   YFSUser findByRole(String role);
 
 }

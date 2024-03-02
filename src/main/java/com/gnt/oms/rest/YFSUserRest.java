@@ -12,4 +12,7 @@ public interface YFSUserRest {
     
     @PostMapping(path ="/signup")
     public ResponseEntity<String> signUp(@RequestBody(required = true) Map<String, String> requestMapping);
+
+    @PostMapping(path ="/login")
+    public ResponseEntity<String> login(@RequestBody(required = true) Map<String, String> requestMapping);
 }

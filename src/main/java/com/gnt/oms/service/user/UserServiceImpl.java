@@ -6,8 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.gnt.oms.dto.SignupDTO;
 import com.gnt.oms.dto.UserDTO;
-import com.gnt.oms.entities.User;
-import com.gnt.oms.enums.UserRole;
+import com.gnt.oms.entities.YFSUser;
 import com.gnt.oms.repository.UserRepository;
 
 import jakarta.annotation.PostConstruct;
@@ -20,34 +19,34 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDTO createUser(SignupDTO signupDTO) {
-        User user = new User();
-        user.setName(signupDTO.getName());
-        user.setEmail(signupDTO.getEmail());
-        user.setUserRole(UserRole.USER);
+        YFSUser user = new YFSUser();
+        user.setUserName(signupDTO.getUserName());
+        user.setEmailId(signupDTO.getEmailId());
+        user.setRole("User");
         user.setPassword(new BCryptPasswordEncoder().encode(signupDTO.getPassword()));
-        User createdUser = userRepository.save(user);
+        YFSUser createdUser = userRepository.save(user);
         UserDTO userDTO = new UserDTO();
-        userDTO.setId(createdUser.getId());
-        userDTO.setName(createdUser.getName());
-        userDTO.setEmail(createdUser.getEmail());
-        userDTO.setUserRole(createdUser.getUserRole());
+        userDTO.setUserId(createdUser.getUserId());
+        userDTO.setUserName(createdUser.getUserName());
+        userDTO.setEmailId(createdUser.getEmailId());
+        userDTO.setRole(createdUser.getRole());
         return userDTO;
     }
 
     @Override
-    public boolean hasUserWithEmail(String email) {        
-        return userRepository.findFirstByEmail(email) != null;
+    public boolean hasUserWithEmail(String emailId) {        
+        return userRepository.findFirstByEmailId(emailId) != null;
     }
 
     @PostConstruct
     public void createAdminUser() {
-        User adminUser = userRepository.findByUserRole(UserRole.ADMIN);
+        YFSUser adminUser = userRepository.findByRole("Admin");
         if(adminUser == null) {
-            User user = new User();
-            user.setUserRole(UserRole.ADMIN);
-            user.setName("Admin");
-            user.setEmail("admin@test.com");
-            user.setPassword(new BCryptPasswordEncoder().encode("admin"));
+            YFSUser user = new YFSUser();
+            user.setRole("Admin");
+            user.setUserName("admin");
+            user.setEmailId("admin@test.com");
+            user.setPassword(new BCryptPasswordEncoder().encode("password"));
             userRepository.save(user);
         }
 

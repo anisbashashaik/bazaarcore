@@ -30,5 +30,17 @@ public class YFSUserRestImpl implements YFSUserRest{
 
         return null;
     }
+
+    @Override
+    public ResponseEntity<String> login(Map<String, String> requestMapping) {
+  
+        try {
+            return userService.login(requestMapping);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     
 }
