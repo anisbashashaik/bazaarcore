@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService{
         user.setUserName(signupDTO.getUserName());
         user.setEmailId(signupDTO.getEmailId());
         user.setRole("User");
+        user.setStatus("true");
         user.setPassword(new BCryptPasswordEncoder().encode(signupDTO.getPassword()));
         YFSUser createdUser = userRepository.save(user);
         UserDTO userDTO = new UserDTO();
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService{
         userDTO.setUserName(createdUser.getUserName());
         userDTO.setEmailId(createdUser.getEmailId());
         userDTO.setRole(createdUser.getRole());
+        userDTO.setStatus(createdUser.getStatus());
         return userDTO;
     }
 
@@ -45,7 +47,8 @@ public class UserServiceImpl implements UserService{
             YFSUser user = new YFSUser();
             user.setRole("Admin");
             user.setUserName("admin");
-            user.setEmailId("admin@test.com");
+            user.setEmailId("sebastiangeorge@mailinator.com");
+            user.setStatus("true");
             user.setPassword(new BCryptPasswordEncoder().encode("password"));
             userRepository.save(user);
         }

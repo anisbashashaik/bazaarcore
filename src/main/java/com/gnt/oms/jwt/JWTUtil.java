@@ -52,17 +52,24 @@ public class JWTUtil {
         return createToken(claims, username);
     }
 
-    public String generateToken(String userName) {
-        return generateToken(userName, "user");
-    }
+    /*public String generateToken(String userName) {
+        return generateToken(userName, "User");
+    }*/
 
     private String createToken(Map<String, Object> claims, String subject) {
+
+        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
+    }
+
+    /*private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
                 .signWith(SignatureAlgorithm.HS256, secret).compact();
-    }
+    }*/
 
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());

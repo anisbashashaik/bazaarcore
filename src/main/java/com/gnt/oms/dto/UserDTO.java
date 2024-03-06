@@ -14,6 +14,7 @@ public class UserDTO {
     private String password;
     //private byte[] img;
     //private UserRole role;
-    private String role;    
+    private String role;   
+    private String  status; 
 
 }

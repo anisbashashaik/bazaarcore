@@ -66,7 +66,7 @@ public class AuthenticationController {
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         YFSUser user = userRepository.findFirstByEmailId(authenticationRequest.getUsername());
-        final String jwt = jwtUtil.generateToken(authenticationRequest.getUsername());
+        final String jwt = jwtUtil.generateToken(authenticationRequest.getUsername(), "User");
         // return new AuthenticationResponse(jwt);
         response.getWriter().write(new JSONObject().put("userId", user.getUserId())
                 .put("role", user.getRole()).toString());

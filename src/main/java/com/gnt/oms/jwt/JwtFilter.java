@@ -25,16 +25,18 @@ public class JwtFilter extends OncePerRequestFilter {
     private JWTUtil jwtUtil;
 
     @Autowired
-    private CustomerUserDetailsService customerUserDetailsService;
-
+    private CustomerUserDetailsService customerUserDetailsService;  
+    
     Claims claims = null;
-    private String userName = null;
+    String userName = null;
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
             FilterChain filterChain)
             throws ServletException, IOException {
 
+            userName = null;
+            claims = null;
             String authorizationHeader = httpServletRequest.getHeader("Authorization");
             String token = null;
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -59,11 +61,11 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     public boolean isAdmin() {
-        return "admin".equalsIgnoreCase((String) claims.get("role"));
+        return "Admin".equalsIgnoreCase((String) claims.get("role"));
     }
 
     public boolean isUser() {
-        return "user".equalsIgnoreCase((String) claims.get("role"));
+        return "User".equalsIgnoreCase((String) claims.get("role"));
     }
 
     public String getCurrentUser() {

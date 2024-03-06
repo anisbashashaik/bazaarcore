@@ -1,0 +1,4 @@
+# Postman set token in environment variables
+var jsonData = JSON.parse(responseBody);
+pm.environment.set("token", jsonData["token"]);
+console.log("token \n" + jsonData["token"]);

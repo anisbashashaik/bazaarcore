@@ -15,6 +15,11 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @NamedQuery (name="YFSUser.findByEmailId", query = "select u from YFSUser u where u.emailId=:emailId")
+@NamedQuery (name = "YFSUser.getAllUsers", query = "select new com.gnt.oms.wrapper.UserWrapper(u.userId, u.userName, u.emailId, u.contactNo, u.status) from YFSUser u where u.role='User'") 
+@NamedQuery (name = "YFSUser.updateStatus", query = "update YFSUser u set u.status=:status where u.userId=:userId")
+@NamedQuery (name = "YFSUser.getAllAdmin", query = "select u.emailId from YFSUser u where u.role='Admin'") 
+
+
 @Data
 @Entity
 @DynamicUpdate
