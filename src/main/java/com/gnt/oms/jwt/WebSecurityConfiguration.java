@@ -43,7 +43,7 @@ public class WebSecurityConfiguration {
     http.csrf(AbstractHttpConfigurer::disable);
     http.authorizeHttpRequests(rQ -> {
       rQ.requestMatchers("/authenticate", "/sign-up", "/apis/v1/*", "/apis/v1/*/*",
-          "/user/login", "/user/signup", "/user/forgotPassword", "/yfsuser/*", "/category/*").permitAll();
+          "/user/login", "/user/signup", "/user/forgotPassword", "/yfsuser/*", "/category/*", "/product/*").permitAll();
       rQ.requestMatchers("/api/**").authenticated();
     });
 
