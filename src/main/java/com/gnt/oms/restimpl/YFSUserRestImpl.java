@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gnt.oms.constants.OMSConstants;
 import com.gnt.oms.rest.YFSUserRest;
 import com.gnt.oms.service.YFSUserService;
-import com.gnt.oms.service.user.UserService;
 import com.gnt.oms.utils.OMSUtil;
 import com.gnt.oms.wrapper.UserWrapper;
 
@@ -72,5 +71,36 @@ public class YFSUserRestImpl implements YFSUserRest{
         }
         return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @Override
+    public ResponseEntity<String> checkToken() {
+       try {
+        return userService.checkToken();
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+        return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(Map<String, String> requestMapping) {
+        try {
+            return userService.changePassword(requestMapping); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> forgotPassword(Map<String, String> requestMapping) {
+        try {
+            return userService.forgotPassword(requestMapping); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
     
 }

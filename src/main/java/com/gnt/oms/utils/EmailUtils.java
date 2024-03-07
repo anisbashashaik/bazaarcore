@@ -5,7 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class EmailUtils {
@@ -31,5 +35,19 @@ public class EmailUtils {
             result[i] = emailCCList.get(i);
         }
         return result;
+    }
+
+    public void forgotPassword(String to, String subject, String password) throws MessagingException {
+        MimeMessage mimeMessage = eMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+        helper.setFrom("anisbashashaik9966@gmail.com");
+        helper.setTo(to);
+        helper.setSubject(subject);
+        String strHtml = "Click here to login: http://localhost:4200/login";
+        mimeMessage.setContent(strHtml , "text/html");
+        eMailSender.send(mimeMessage);
+
+
+
     }
 }

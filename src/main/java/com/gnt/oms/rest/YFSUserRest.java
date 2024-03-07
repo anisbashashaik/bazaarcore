@@ -26,4 +26,14 @@ public interface YFSUserRest {
 
     @PostMapping(path = "/update")
     public ResponseEntity<String> updateUser(@RequestBody (required = true) Map<String, String> requestMapping);
+
+    @GetMapping (path ="/checktoken")
+    public ResponseEntity<String> checkToken();
+
+    @PostMapping(path ="/changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody(required = true) Map<String, String> requestMapping);
+
+    @PostMapping(path ="/forgotPassword")
+    public ResponseEntity<String> forgotPassword(@RequestBody(required = true) Map<String, String> requestMapping);
 }
+

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import com.gnt.oms.constants.OMSConstants;
 import com.gnt.oms.dao.YFSUserDAO;
-import com.gnt.oms.entities.User;
 import com.gnt.oms.entities.YFSUser;
 import com.gnt.oms.jwt.CustomerUserDetailsService;
 import com.gnt.oms.jwt.JWTUtil;
@@ -26,7 +25,7 @@ import com.gnt.oms.service.YFSUserService;
 import com.gnt.oms.utils.EmailUtils;
 import com.gnt.oms.utils.OMSUtil;
 import com.gnt.oms.wrapper.UserWrapper;
-
+import com.google.common.base.Strings;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -152,12 +151,12 @@ public class YFSUserServiceImpl implements YFSUserService {
 
         try {
             if (jwtFilter.isAdmin()) {
-                Optional<YFSUser> optional =  userDAO.findById(Integer.parseInt(requestMap.get("userId")));
-                if(!optional.isEmpty()){
+                Optional<YFSUser> optional = userDAO.findById(Integer.parseInt(requestMap.get("userId")));
+                if (!optional.isEmpty()) {
                     userDAO.updateStatus(requestMap.get("status"), requestMap.get("userId"));
                     sendMailToAllAdmin(requestMap.get("status"), optional.get().getEmailId(), userDAO.getAllAdmin());
                     return OMSUtil.getResponseEntity("User Status Updated successfully", HttpStatus.OK);
-                }else{
+                } else {
                     return OMSUtil.getResponseEntity("User id does not exists", HttpStatus.OK);
                 }
             } else {
@@ -173,11 +172,63 @@ public class YFSUserServiceImpl implements YFSUserService {
 
     private void sendMailToAllAdmin(String status, String emailId, List<String> allAdmin) {
         allAdmin.remove(jwtFilter.getCurrentUser());
-        if(status!= null && status.equalsIgnoreCase("true")){
-            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account Approved by Admin", "Dear User,  \n Account has been activated. Thanks", allAdmin);
-        }else{
-            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account Disabled by Admin", "Dear User, \n Account has been deactivated. Thanks", allAdmin);
+        if (status != null && status.equalsIgnoreCase("true")) {
+            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account Approved by Admin",
+                    "Dear User,  \n Account has been activated. Thanks", allAdmin);
+        } else {
+            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account Disabled by Admin",
+                    "Dear User, \n Account has been deactivated. Thanks", allAdmin);
         }
+    }
+
+    @Override
+    public ResponseEntity<String> checkToken() {
+        try {
+            return OMSUtil.getResponseEntity("true", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(Map<String, String> requestMap) {
+        try {
+            YFSUser userObj = userDAO.findByEmailId(jwtFilter.getCurrentUser());
+            
+            log.info("userObj:", userObj);
+            if(!userObj.equals(null)){
+                log.info("current password:"+ userObj.getPassword());
+                log.info("oldPassword:"+ requestMap.get("oldPassword"));
+                log.info("newPassword:"+requestMap.get("newPassword"));
+                if(userObj.getPassword().equals(requestMap.get("oldPassword"))){
+                    userObj.setPassword(requestMap.get("newPassword"));
+                    userDAO.save(userObj);
+                    return OMSUtil.getResponseEntity("Password updated successfully", HttpStatus.OK);
+                }
+                return  OMSUtil.getResponseEntity("Incorrect Old Password", HttpStatus.BAD_REQUEST);
+            }
+            return  OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> forgotPassword(Map<String, String> requestMap) {
+        try {
+            YFSUser userObj = userDAO.findByEmailId(requestMap.get("emailId"));            
+            if(!userObj.equals(null) && !Strings.isNullOrEmpty(userObj.getEmailId())){
+                emailUtils.forgotPassword(userObj.getEmailId(), "Credentials by OMS", userObj.getPassword());
+                return  OMSUtil.getResponseEntity("Check mail for your credentials", HttpStatus.OK);
+            }else{
+                return  OMSUtil.getResponseEntity("Invalid Email Id provided", HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
