@@ -1,4 +1,4 @@
-package com.gnt.oms.controller;
+package com.gnt.oms.restimpl;
 
 import java.io.IOException;
 
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gnt.oms.dao.UserRepository;
 import com.gnt.oms.dto.AuthenticationRequest;
 import com.gnt.oms.entities.YFSUser;
 import com.gnt.oms.jwt.JWTUtil;
-import com.gnt.oms.repository.UserRepository;
 import com.gnt.oms.service.user.UserService;
 
 import jakarta.servlet.ServletException;

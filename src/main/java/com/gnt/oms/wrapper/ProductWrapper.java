@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ProductWrapper {
-    
+
     Integer productId;
     String productName;
     String description;
@@ -13,7 +13,12 @@ public class ProductWrapper {
     Integer categoryId;
     String categoryName;
 
-    ProductWrapper(Integer productId, String productName, String description, Integer price, String status, Integer categoryId, String categoryName){
+    public ProductWrapper() {
+
+    }
+
+    ProductWrapper(Integer productId, String productName, String description, Integer price, String status,
+            Integer categoryId, String categoryName) {
         this.productId = productId;
         this.productName = productName;
         this.description = description;
@@ -23,4 +28,15 @@ public class ProductWrapper {
         this.categoryName = categoryName;
     }
 
+    ProductWrapper(Integer productId, String productName, String description, Integer price) {
+        this.productId = productId;
+        this.productName = productName;
+        this.description = description;
+        this.price = price;
+    }
+
+    ProductWrapper(Integer productId, String productName) {
+        this.productId = productId;
+        this.productName = productName;
+    }
 }

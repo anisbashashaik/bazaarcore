@@ -1,4 +1,4 @@
-package com.gnt.oms.repository;
+package com.gnt.oms.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

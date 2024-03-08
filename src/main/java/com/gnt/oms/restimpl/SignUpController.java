@@ -1,4 +1,4 @@
-package com.gnt.oms.controller;
+package com.gnt.oms.restimpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

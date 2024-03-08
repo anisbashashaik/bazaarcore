@@ -21,7 +21,7 @@ import com.gnt.oms.wrapper.ProductWrapper;
 import com.google.common.base.Strings;
 
 @Service
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ProductDAO productDAO;
@@ -32,19 +32,18 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ResponseEntity<String> addProduct(Map<String, String> requestMap) {
         try {
-           if(jwtFilter.isAdmin()){
-                if(validateProductMap(requestMap, false)){
+            if (jwtFilter.isAdmin()) {
+                if (validateProductMap(requestMap, false)) {
                     productDAO.save(getProductFromMap(requestMap, false));
-                    
-                    
+
                     return OMSUtil.getResponseEntity("Product Saved Successfully", HttpStatus.OK);
                 }
                 return OMSUtil.getResponseEntity(OMSConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
-           }else{
-             return OMSUtil.getResponseEntity (OMSConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
-           }
+            } else {
+                return OMSUtil.getResponseEntity(OMSConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
         return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -54,10 +53,10 @@ public class ProductServiceImpl implements ProductService{
         Category category = new Category();
         category.setCategoryId(Integer.parseInt(requestMap.get("categoryId")));
 
-        if(isAdd) {
+        if (isAdd) {
             product.setProductId(Integer.parseInt(requestMap.get("productId")));
             product.setStatus("true");
-        }else{
+        } else {
             product.setStatus("true");
         }
         product.setCategory(category);
@@ -68,11 +67,11 @@ public class ProductServiceImpl implements ProductService{
     }
 
     private boolean validateProductMap(Map<String, String> requestMap, boolean validateId) {
-        
-        if(requestMap.containsKey("productName")){
-            if(requestMap.containsKey("productId") && validateId){
+
+        if (requestMap.containsKey("productName")) {
+            if (requestMap.containsKey("productId") && validateId) {
                 return true;
-            }else if(!validateId){
+            } else if (!validateId) {
                 return true;
             }
         }
@@ -81,39 +80,99 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ResponseEntity<List<ProductWrapper>> getAllProducts() {
-        try {         
-          return new ResponseEntity<>(productDAO.getAllProducts(), HttpStatus.OK);
-       } catch (Exception e) {
-        e.printStackTrace();
-       }
-       return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            return new ResponseEntity<>(productDAO.getAllProducts(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
     public ResponseEntity<String> updateProduct(Map<String, String> requestMap) {
         try {
-            if(jwtFilter.isAdmin()){
-                 if(validateProductMap(requestMap, true)){
+            if (jwtFilter.isAdmin()) {
+                if (validateProductMap(requestMap, true)) {
                     Optional<Product> optional = productDAO.findById(Integer.parseInt(requestMap.get("productId")));
-                    if(!optional.isEmpty()){
+                    if (!optional.isEmpty()) {
                         Product product = getProductFromMap(requestMap, true);
-                        //product.setStatus(optional.get().getStatus());
+                        // product.setStatus(optional.get().getStatus());
                         productDAO.save(product);
-                    }else{
+                    } else {
                         return OMSUtil.getResponseEntity("Product Id not exists", HttpStatus.OK);
                     }
-                    productDAO.save(getProductFromMap(requestMap, true));                    
-                     return OMSUtil.getResponseEntity("Product Updated Successfully", HttpStatus.OK);
-                 }else{
+                    productDAO.save(getProductFromMap(requestMap, true));
+                    return OMSUtil.getResponseEntity("Product Updated Successfully", HttpStatus.OK);
+                } else {
                     return OMSUtil.getResponseEntity(OMSConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
-                 }
-            }else{
-              return OMSUtil.getResponseEntity (OMSConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+                }
+            } else {
+                return OMSUtil.getResponseEntity(OMSConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
             }
-         } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-         }
-         return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    
+
+    @Override
+    public ResponseEntity<String> deleteProduct(Integer productId) {
+        try {
+            if (jwtFilter.isAdmin()) {
+                Optional<Product> optional = productDAO.findById(productId);
+                if (!optional.isEmpty()) {
+                    productDAO.deleteById(productId);
+                    return OMSUtil.getResponseEntity("Product deleted successfully", HttpStatus.OK);
+                } else {
+                    return OMSUtil.getResponseEntity("Product Id not exists", HttpStatus.OK);
+                }
+            } else {
+                return OMSUtil.getResponseEntity(OMSConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> updateStatus(Map<String, String> requestMap) {
+        try {
+            if (jwtFilter.isAdmin()) {
+                Optional optional = productDAO.findById(Integer.parseInt(requestMap.get("productId")));
+                if (!optional.isEmpty()) {
+                    productDAO.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("productId")));
+                    return OMSUtil.getResponseEntity("Product status Updated Successfully", HttpStatus.OK);
+                } else {
+                    return OMSUtil.getResponseEntity("Product Id not exists", HttpStatus.OK);
+                }
+            } else {
+                return OMSUtil.getResponseEntity(OMSConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<ProductWrapper>> getByCategory(Integer categoryId) {
+        try {
+            return new ResponseEntity<>(productDAO.getProductByCategory(categoryId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<ProductWrapper> getByProductId(Integer productId) {
+        try {
+            return new ResponseEntity<>(productDAO.getByProductId(productId), HttpStatus.OK);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ProductWrapper(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

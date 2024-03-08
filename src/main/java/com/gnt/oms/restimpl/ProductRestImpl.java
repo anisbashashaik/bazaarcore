@@ -52,5 +52,47 @@ public class ProductRestImpl implements ProductRest{
           }
           return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @Override
+    public ResponseEntity<String> deleteProduct(Integer productId) {
+        try {
+            return productService.deleteProduct(productId);
+          } catch (Exception e) {
+               e.printStackTrace();
+          }
+          return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> updateStatus(Map<String, String> requestMap) {
+        try {
+            return productService.updateStatus(requestMap);
+          } catch (Exception e) {
+               e.printStackTrace();
+          }
+          return OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<List<ProductWrapper>> getByCategory(Integer categoryId) {
+        try{
+            return productService.getByCategory(categoryId);
+         }catch (Exception e) {
+             e.printStackTrace();
+         }
+ 
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<ProductWrapper> getByProductId(Integer productId) {
+        try{
+            return productService.getByProductId(productId);
+         }catch (Exception e) {
+             e.printStackTrace();
+         }
+ 
+        return new ResponseEntity<ProductWrapper>(new ProductWrapper(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     
 }

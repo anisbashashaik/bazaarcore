@@ -18,6 +18,10 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @NamedQuery (name = "Product.getAllProducts", query = "select new com.gnt.oms.wrapper.ProductWrapper(p.productId, p.productName, p.description, p.price, p.status, p.category.categoryId, p.category.categoryName) from Product p") 
+@NamedQuery (name = "Product.updateStatus", query = "update Product p set p.status=:status where p.productId=:productId")
+@NamedQuery (name = "Product.getProductByCategory", query = "select new  com.gnt.oms.wrapper.ProductWrapper(p.productId, p.productName) from Product p where p.category.categoryId=:categoryId and p.status='true'")
+@NamedQuery(name ="Product.getByProductId", query = "select new  com.gnt.oms.wrapper.ProductWrapper(p.productId, p.productName, p.description, p.price) from Product p where p.productId=:productId")
+
 @Data
 @Entity
 @DynamicUpdate

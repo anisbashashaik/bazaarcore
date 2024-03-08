@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.gnt.oms.dao.UserRepository;
 import com.gnt.oms.dto.SignupDTO;
 import com.gnt.oms.dto.UserDTO;
 import com.gnt.oms.entities.YFSUser;
-import com.gnt.oms.repository.UserRepository;
 
 import jakarta.annotation.PostConstruct;
 

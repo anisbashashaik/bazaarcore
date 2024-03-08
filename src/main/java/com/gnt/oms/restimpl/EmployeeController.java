@@ -1,4 +1,4 @@
-package com.gnt.oms.controller;
+package com.gnt.oms.restimpl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gnt.oms.dao.EmployeeRepository;
 import com.gnt.oms.entities.Employee;
 import com.gnt.oms.exception.ResourceNotFoundException;
-import com.gnt.oms.repository.EmployeeRepository;
 
 @RestController
 @RequestMapping("/apis/v1/")
