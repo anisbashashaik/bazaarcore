@@ -45,7 +45,7 @@ public class WebSecurityConfiguration {
       rQ.requestMatchers("/authenticate", "/sign-up", "/apis/v1/*", "/apis/v1/*/*",
           "/user/login", "/user/signup", "/user/forgotPassword", "/yfsuser/*", "/category/*", "/product/*", "/product/delete/*",
           "/product/getByCategory/*", "/product/getByProductId/*", 
-          "/bill/*", "/bill/delete/*", "/dashboard/*").permitAll();        
+          "/bill/*", "/bill/delete/*", "/dashboard/*", "/yfsuser/checkToken/*").permitAll();        
       rQ.requestMatchers("/api/**").authenticated();
     });
 
