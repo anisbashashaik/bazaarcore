@@ -52,4 +52,10 @@ public class YFSUser implements Serializable {
     @Column(name = "role")
     private String role;
 
+    @Override
+    public String toString() {
+        return "YFSUser [userId=" + userId + ", userName=" + userName + ", emailId=" + emailId + ", contactNo="
+                + contactNo + ", password=" + password + ", status=" + status + ", role=" + role + "]";
+    }
+
 }

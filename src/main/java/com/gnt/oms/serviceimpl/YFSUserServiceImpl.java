@@ -196,17 +196,25 @@ public class YFSUserServiceImpl implements YFSUserService {
         try {
             YFSUser userObj = userDAO.findByEmailId(jwtFilter.getCurrentUser());
             
-            log.info("userObj:", userObj);
+            log.info("userObj:"+userObj.toString());
             if(!userObj.equals(null)){
-                log.info("current password:"+ userObj.getPassword());
-                log.info("oldPassword:"+ requestMap.get("oldPassword"));
-                log.info("newPassword:"+requestMap.get("newPassword"));
-                if(userObj.getPassword().equals(requestMap.get("oldPassword"))){
-                    userObj.setPassword(requestMap.get("newPassword"));
+                log.info("current password from database:"+ userObj.getPassword());
+                
+                String uiPassword = requestMap.get("oldPassword");
+                String dbPassword = userObj.getPassword();
+                
+                log.info("oldPassword from UI:"+ uiPassword);
+                log.info("Password from DB:"+dbPassword);
+                log.info("newPassword from UI:"+requestMap.get("newPassword"));
+
+                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                if(encoder.matches(uiPassword, dbPassword)) {
+                    userObj.setPassword(new BCryptPasswordEncoder().encode(requestMap.get("newPassword")));
                     userDAO.save(userObj);
                     return OMSUtil.getResponseEntity("Password updated successfully", HttpStatus.OK);
+                }else{
+                    return  OMSUtil.getResponseEntity("Incorrect Old Password", HttpStatus.BAD_REQUEST);
                 }
-                return  OMSUtil.getResponseEntity("Incorrect Old Password", HttpStatus.BAD_REQUEST);
             }
             return  OMSUtil.getResponseEntity(OMSConstants.SOMETHING_WENT_STRING, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
